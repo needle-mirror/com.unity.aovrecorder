@@ -1,11 +1,11 @@
 {
   "name": "com.unity.aovrecorder",
   "displayName": "Unity AOV Recorder",
-  "version": "0.1.0-preview.3",
+  "version": "0.1.0-preview.5",
   "unity": "2019.1",
   "description": "Unity AOV Recorder adds the capability to record Arbitrary Output Variable from Unity HD Render Pipeline. ",
   "dependencies": {
-    "com.unity.recorder": "2.0.2-preview.3"
+    "com.unity.recorder": "2.0.3-preview.1"
   },
   "keywords": [
     "unity",
@@ -21,6 +21,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.cds.internal.unity3d.com:unity/com.unity.aovrecorder.git",
-    "revision": "029f2a4b1a024941bd0e43f096360307975dcff4"
+    "revision": "4d6b0e1cb22056159cbbe8134eb7bd2e4c0cfd7e"
   }
 }
