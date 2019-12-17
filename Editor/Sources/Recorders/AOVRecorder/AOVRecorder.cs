@@ -19,17 +19,17 @@ namespace UnityEditor.Recorder
         ImageSpec m_imgSpec = null;
         ImageOutput m_imgOutput = null;
 #endif       
-        protected override TextureFormat readbackTextureFormat
+        protected override TextureFormat ReadbackTextureFormat
         {
             get
             {
-                return m_Settings.outputFormat != AOVRecorderOutputFormat.EXR
+                return Settings.outputFormat != AOVRecorderOutputFormat.EXR
                     ? TextureFormat.RGBA32
                     : TextureFormat.RGBAFloat;
             }
         }
 
-        public override bool BeginRecording(RecordingSession session)
+        protected override bool BeginRecording(RecordingSession session)
         {
             if (!base.BeginRecording(session))
             {
@@ -41,14 +41,14 @@ namespace UnityEditor.Recorder
             // Disable async compile shader setting when recording
             EditorSettings.asyncShaderCompilation = false;
 
-            m_Settings.fileNameGenerator.CreateDirectory(session);
+            Settings.FileNameGenerator.CreateDirectory(session);
 #if OIIO_AVAILABLE
             m_imgOutput = ImageOutput.create("dummy."+m_Settings.extension);
 #endif
             return true;
         }
 
-        public override void EndRecording(RecordingSession session)
+        protected override void EndRecording(RecordingSession session)
         {
             // Restore the asyncShaderCompilation setting
             EditorSettings.asyncShaderCompilation = m_asyncShaderCompileSetting;
@@ -61,14 +61,14 @@ namespace UnityEditor.Recorder
             base.EndRecording(session);
         }
 
-        public override void RecordFrame(RecordingSession session)
+        protected override void RecordFrame(RecordingSession session)
         {
             if (m_Inputs.Count != 1)
                 throw new Exception("Unsupported number of sources");
             // Store path name for this frame into a queue, as WriteFrame may be called
             // asynchronously later on, when the current frame is no longer the same (thus creating
             // a file name that isn't in sync with the session's current frame).
-            m_PathQueue.Enqueue(m_Settings.fileNameGenerator.BuildAbsolutePath(session));
+            m_PathQueue.Enqueue(Settings.FileNameGenerator.BuildAbsolutePath(session));
             base.RecordFrame(session);
         }
 
@@ -79,7 +79,7 @@ namespace UnityEditor.Recorder
             Profiler.BeginSample("AOVRecorder.EncodeImage");
             try
             {
-                switch (m_Settings.outputFormat)
+                switch (Settings.outputFormat)
                 {
                     case AOVRecorderOutputFormat.EXR:
                     {
@@ -130,7 +130,7 @@ namespace UnityEditor.Recorder
                 Profiler.EndSample();
             }
 
-            if(m_Inputs[0] is BaseRenderTextureInput || m_Settings.outputFormat != AOVRecorderOutputFormat.JPEG)
+            if(m_Inputs[0] is BaseRenderTextureInput || Settings.outputFormat != AOVRecorderOutputFormat.JPEG)
               UnityHelpers.Destroy(tex);           
         }
 
@@ -148,7 +148,7 @@ namespace UnityEditor.Recorder
 {
     class AOVRecorder : BaseTextureRecorder<AOVRecorderSettings>
     {
-        protected override TextureFormat readbackTextureFormat
+        protected override TextureFormat ReadbackTextureFormat
         {
             get
             {

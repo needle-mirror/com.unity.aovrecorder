@@ -6,58 +6,135 @@ using UnityEngine;
 
 namespace UnityEditor.Recorder
 {
+    /// <summary>
+    /// Available options for the output image format used by AOV Image Sequence Recorder.
+    /// </summary>
     public enum AOVRecorderOutputFormat
     {
+        /// <summary>
+        /// Output the recording in PNG format.
+        /// </summary>
         PNG,
+        /// <summary>
+        /// Output the recording in JPEG format.
+        /// </summary>
         JPEG,
+        /// <summary>
+        /// Output the recording in EXR format.
+        /// </summary>
         EXR     
     }
 
     // First entries (up to Alpha) of AOVGType must be kept in sync with
     // HDRP Runtime/Debug/MaterialDebug.cs MaterialShaderProperty
+    
+    /// <summary>
+    /// Available options AOV Types.
+    /// </summary>    
     public enum AOVGType
     {
+        /// <summary>
+        /// Select the Beauty AOV.
+        /// </summary>
         Beauty,
+        /// <summary>
+        /// Select the Albedo AOV.
+        /// </summary>
         Albedo,
+        /// <summary>
+        /// Select the Normal AOV.
+        /// </summary>
         Normal,
+        /// <summary>
+        /// Select the Smootness AOV.
+        /// </summary>
         Smoothness,
+        /// <summary>
+        /// Select the Ambient Occlusion AOV.
+        /// </summary>
         AmbientOcclusion,
+        /// <summary>
+        /// Select the Metal AOV.
+        /// </summary>
         Metal,
+        /// <summary>
+        /// Select the Specular AOV.
+        /// </summary>
         Specular,
+        /// <summary>
+        /// Select the Alpha AOV.
+        /// </summary>
         Alpha,
-         // Additional option for the AOV Recorder
+        // Additional option for the AOV Recorder
+        /// <summary>
+        /// Select the Depth AOV.
+        /// </summary>
         Depth
 
     }
 
+    /// <summary>
+    /// Futur compession type support.
+    /// </summary>       
     public enum AOVCompressionType
     {
+     
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         none,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         rle,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         zip,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         zips,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         piz,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         pxr24,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         b44,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         b44a,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         dwaa,
+        /// <summary>
+        /// Futur compession type support.
+        /// </summary>       
         dwab
     }
      
     [RecorderSettings(typeof(AOVRecorder), "AOV Image Sequence", "aovimagesequence_16")]
-    public class AOVRecorderSettings : RecorderSettings
+    class AOVRecorderSettings : RecorderSettings
     {
-        public AOVRecorderOutputFormat outputFormat = AOVRecorderOutputFormat.EXR;
+        [SerializeField] internal AOVRecorderOutputFormat outputFormat = AOVRecorderOutputFormat.EXR;
         [SerializeField] internal AOVGType AOVGSelection = AOVGType.Beauty;
         [SerializeField] internal AOVCompressionType AOVCompression = AOVCompressionType.dwaa;
         [SerializeField] internal AOVImageInputSelector m_AOVImageInputSelector = new AOVImageInputSelector();
  
         public AOVRecorderSettings()
         {
-            fileNameGenerator.fileName = "aov_image_" + DefaultWildcard.Frame;
+            FileNameGenerator.FileName = "aov_image_" + DefaultWildcard.Frame;
         }
 
-        public override string extension
+        protected override string Extension
         {
             get
             {
@@ -81,11 +158,11 @@ namespace UnityEditor.Recorder
             set { m_AOVImageInputSelector.imageInputSettings = value; }
         }
 
-        internal override bool ValidityCheck(List<string> errors)
+        protected override bool ValidityCheck(List<string> errors)
         {
             var ok = base.ValidityCheck(errors);
 
-            if(string.IsNullOrEmpty(fileNameGenerator.fileName))
+            if(string.IsNullOrEmpty(FileNameGenerator.FileName))
             {
                 ok = false;
                 errors.Add("missing file name");
@@ -99,7 +176,7 @@ namespace UnityEditor.Recorder
             return ok;
         }
 
-        internal override  bool HasErrors()
+        protected override  bool HasErrors()
         {
             #if HDRP_AVAILABLE
             
@@ -111,15 +188,15 @@ namespace UnityEditor.Recorder
             var hdrpMinVersion = 5.11;
             #endif
 
-            enabled = false;
+            Enabled = false;
             Debug.LogError("AOV Recorder requires the HDRP package version " + hdrpMinVersion + " or greater to be installed");
             return true;
             #endif
         }
 
-        public override IEnumerable<RecorderInputSettings> inputsSettings
+        public override IEnumerable<RecorderInputSettings> InputsSettings
         {
-            get { yield return m_AOVImageInputSelector.selected; }
+            get { yield return m_AOVImageInputSelector.Selected; }
         } 
     }
 }

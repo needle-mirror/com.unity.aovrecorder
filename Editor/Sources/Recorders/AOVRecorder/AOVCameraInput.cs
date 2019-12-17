@@ -45,7 +45,7 @@ namespace UnityEditor.Recorder.Input
                 {
                     if (m_TempRT == null)
                     {
-                        m_TempRT = CreateFrameBuffer(RenderTextureFormat.ARGBFloat, outputWidth, outputHeight, 0,
+                        m_TempRT = CreateFrameBuffer(RenderTextureFormat.ARGBFloat, OutputWidth, OutputHeight, 0,
                             false);
                     }
                     var aovRequest = new AOVRequest(AOVRequest.@default);
@@ -60,7 +60,7 @@ namespace UnityEditor.Recorder.Input
                         aovRequest.SetFullscreenOutput((MaterialSharedProperty) aovRecorderSettings.AOVGSelection);
                     }
 
-                    var bufAlloc = m_ColorRT ?? (m_ColorRT = RTHandles.Alloc(outputWidth, outputHeight));
+                    var bufAlloc = m_ColorRT ?? (m_ColorRT = RTHandles.Alloc(OutputWidth, OutputHeight));
 
                     var aovRequestBuilder = new AOVRequestBuilder();
                     aovRequestBuilder.Add(aovRequest,
@@ -104,13 +104,13 @@ namespace UnityEditor.Recorder.Input
                 if ( aovRecorderSettings.AOVGSelection == AOVGType.Beauty )
                     return;
 
-                if (readbackTexture == null)
+                if (ReadbackTexture == null)
                 {
-                    readbackTexture = new Texture2D(outputWidth, outputHeight, TextureFormat.RGBAFloat, false);
+                    ReadbackTexture = new Texture2D(OutputWidth, OutputHeight, TextureFormat.RGBAFloat, false);
                 }
                 RenderTexture.active = m_TempRT;
-                readbackTexture.ReadPixels(new Rect(0, 0, outputWidth, outputHeight), 0, 0, false);
-                readbackTexture.Apply();
+                ReadbackTexture.ReadPixels(new Rect(0, 0, OutputWidth, OutputHeight), 0, 0, false);
+                ReadbackTexture.Apply();
                 RenderTexture.active = null;
             }
         }
@@ -124,7 +124,7 @@ namespace UnityEditor.Recorder.Input
                 if ( aovRecorderSettings.AOVGSelection == AOVGType.Beauty )
                     return;
 
-                var add = targetCamera.GetComponent<HDAdditionalCameraData>();
+                var add = TargetCamera.GetComponent<HDAdditionalCameraData>();
                 if (add != null)
                 {
                     add.SetAOVRequests(null);
@@ -132,19 +132,19 @@ namespace UnityEditor.Recorder.Input
             }
         }
 
-        public override void NewFrameStarting(RecordingSession session)
+        protected override void NewFrameStarting(RecordingSession session)
         {
             base.NewFrameStarting(session);
-            EnableAOVCapture(session, targetCamera);
+            EnableAOVCapture(session, TargetCamera);
         }
 
-        public override void NewFrameReady(RecordingSession session)
+        protected override void NewFrameReady(RecordingSession session)
         {
             ReadbackAOVCapture(session);
             base.NewFrameReady(session);
         }
 
-        public override void FrameDone(RecordingSession session)
+        protected override void FrameDone(RecordingSession session)
         {
             base.FrameDone(session);
             DisableAOVCapture(session);

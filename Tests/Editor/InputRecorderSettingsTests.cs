@@ -12,17 +12,16 @@ namespace UnityEditor.Recorder.Tests
 		{
 			var input = new AOVCameraInputSettings
 			{
-				source = ImageSource.MainCamera,
-				outputWidth = 640,
-				outputHeight = 480,
-				cameraTag = "AAA",
-				allowTransparency = true,
-				captureUI = true,
-				flipFinalOutput = false
+				Source = ImageSource.MainCamera,
+				OutputWidth = 640,
+				OutputHeight = 480,
+				CameraTag = "AAA",
+				CaptureUI = true,
+				FlipFinalOutput = false
 			};
 
-			Assert.AreEqual(640, input.outputWidth);
-			Assert.AreEqual(480, input.outputHeight);
+			Assert.AreEqual(640, input.OutputWidth);
+			Assert.AreEqual(480, input.OutputHeight);
 			
 			Assert.NotNull(input);
 		}

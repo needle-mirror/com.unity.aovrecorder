@@ -23,9 +23,7 @@ namespace UnityEditor.Recorder
 
             if (target == null)
                 return;
-
-            var pf = new PropertyFinder<AOVRecorderSettings>(serializedObject);
-            m_OutputFormat = pf.Find(w => w.outputFormat);
+            
             m_OutputFormat = serializedObject.FindProperty("outputFormat");
             m_AOVGSelection = serializedObject.FindProperty("AOVGSelection");
             m_AOVCompression = serializedObject.FindProperty("AOVCompression");

@@ -10,7 +10,7 @@ namespace UnityEditor.Recorder
         [SerializeField] public CameraInputSettings cameraInputSettings = new AOVCameraInputSettings();
         public ImageInputSettings imageInputSettings
         {
-            get { return (ImageInputSettings) selected; }
+            get { return (ImageInputSettings) Selected; }
             set
             {
                 if (value == null)
@@ -18,7 +18,7 @@ namespace UnityEditor.Recorder
 
                 if (value is CameraInputSettings )
                 {
-                    selected = value;
+                    Selected = value;
                 }
                 else
                 {
