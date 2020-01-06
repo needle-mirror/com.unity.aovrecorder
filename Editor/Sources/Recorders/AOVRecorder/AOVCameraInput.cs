@@ -155,27 +155,27 @@ namespace UnityEditor.Recorder.Input
     {
         void PrepFrameRenderTexture()
         {
-            if (outputRT != null)
+            if (OutputRenderTexture != null)
             {
-                if (outputRT.IsCreated() && outputRT.width == outputWidth && outputRT.height == outputHeight &&
-                    outputRT.format == RenderTextureFormat.ARGBFloat)
+                if (OutputRenderTexture.IsCreated() && OutputRenderTexture.width == OutputWidth && OutputRenderTexture.height == OutputHeight &&
+                    OutputRenderTexture.format == RenderTextureFormat.ARGBFloat)
                     return;
                 ReleaseBuffer();
             }
-            outputRT = new RenderTexture(outputWidth, outputHeight, 0, RenderTextureFormat.ARGBFloat)
+            OutputRenderTexture = new RenderTexture(OutputWidth, OutputHeight, 0, RenderTextureFormat.ARGBFloat)
             {
                 wrapMode = TextureWrapMode.Repeat
             };
-            outputRT.Create();
+            OutputRenderTexture.Create();
         }
 
         void EnableAOVCapture(RecordingSession session)
         {
             var pipeline = RenderPipelineManager.currentPipeline as HDRenderPipeline;
             
-            if (readbackTexture == null)
+            if (ReadbackTexture == null)
             {
-                readbackTexture = new Texture2D(outputWidth, outputHeight, TextureFormat.RGBAFloat, false);
+                ReadbackTexture = new Texture2D(OutputWidth, OutputHeight, TextureFormat.RGBAFloat, false);
             }
 
             PrepFrameRenderTexture();
@@ -203,10 +203,10 @@ namespace UnityEditor.Recorder.Input
             var aovRecorderSettings = session.settings as AOVRecorderSettings;
             if (aovRecorderSettings != null)
             {
-                targetCamera.Render();
-                RenderTexture.active = outputRT;
-                readbackTexture.ReadPixels(new Rect(0, 0, outputWidth, outputHeight), 0, 0, false);
-                readbackTexture.Apply();
+                TargetCamera.Render();
+                RenderTexture.active = OutputRenderTexture;
+                ReadbackTexture.ReadPixels(new Rect(0, 0, OutputWidth, OutputHeight), 0, 0, false);
+                ReadbackTexture.Apply();
                 RenderTexture.active = null;
             }
         }
@@ -226,7 +226,7 @@ namespace UnityEditor.Recorder.Input
             DisableAOVCapture(session);
         }
 
-        public override void NewFrameReady(RecordingSession session)
+        protected override void NewFrameReady(RecordingSession session)
         {
             CaptureAOV(session);
             base.NewFrameReady(session);
